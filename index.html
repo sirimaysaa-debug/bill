@@ -398,7 +398,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div>
                     <h3 class="font-heading text-base font-bold text-slate-900">รายการบิลที่บันทึกไว้</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">คลิก "เปิดบิล" เพื่อนำข้อมูลกลับมาแก้ไขหรือพิมพ์</p>
+                    <p class="text-xs text-slate-500 mt-0.5">บันทึกถาวรในเบราว์เซอร์เครื่องนี้ • คลิก "เปิดบิลนี้" เพื่อนำกลับมาแก้ไขหรือพิมพ์</p>
                 </div>
                 <button type="button" onclick="toggleHistoryDrawer(false)" class="text-slate-500 hover:text-slate-800 text-sm font-medium px-2.5 py-1 rounded-lg hover:bg-slate-100 cursor-pointer">
                     ปิด
@@ -639,6 +639,7 @@
     <script>
         const DEFAULT_ROW_COUNT = 1;
         const QUICK_CUSTOMERS_STORAGE_KEY = 'anusorn_invoice_quick_customers_v1';
+        const SAVED_BILLS_STORAGE_KEY = 'anusorn_invoice_saved_bills_v1';
         let savedBillsHistory = [];
         let customQuickCustomers = [];
 
@@ -659,6 +660,27 @@
                 window.localStorage.setItem(QUICK_CUSTOMERS_STORAGE_KEY, JSON.stringify(customQuickCustomers));
             } catch (err) {
                 // หากเบราว์เซอร์จำกัดพื้นที่จัดเก็บ ให้ยังใช้งานในหน่วยความจำได้ตามปกติ
+            }
+        }
+
+        function loadSavedBillsHistory() {
+            try {
+                const raw = window.localStorage.getItem(SAVED_BILLS_STORAGE_KEY);
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) return [];
+                return parsed.filter(item => item && typeof item.id === 'string');
+            } catch (err) {
+                return [];
+            }
+        }
+
+        function persistSavedBillsHistory() {
+            try {
+                window.localStorage.setItem(SAVED_BILLS_STORAGE_KEY, JSON.stringify(savedBillsHistory));
+                return true;
+            } catch (err) {
+                return false;
             }
         }
 
@@ -1189,10 +1211,13 @@
                 };
 
                 savedBillsHistory.unshift(record);
+                const persisted = persistSavedBillsHistory();
                 renderSavedBillsList();
                 showStatusNotice(
                     'เก็บบิลเรียบร้อยแล้ว',
-                    `บันทึก "${record.docType}" ของ ${record.customerName} (ยอดสุทธิ ${record.netTotal} บาท) ไว้ในรายการบิลที่บันทึกแล้วค่ะ`
+                    persisted
+                        ? `บันทึก "${record.docType}" ของ ${record.customerName} (ยอดสุทธิ ${record.netTotal} บาท) ไว้ถาวรในเบราว์เซอร์เครื่องนี้แล้วค่ะ`
+                        : `บันทึก "${record.docType}" ของ ${record.customerName} (ยอดสุทธิ ${record.netTotal} บาท) ในหน้านี้แล้ว (พื้นที่เก็บถาวรของเบราว์เซอร์อาจเต็มหรือถูกจำกัด)`
                 );
             } catch (err) {
                 showStatusNotice('ไม่สามารถเก็บบิลได้', 'เกิดข้อผิดพลาดขณะรวบรวมข้อมูลบิลปัจจุบันค่ะ');
@@ -1224,8 +1249,8 @@
             if (savedBillsHistory.length === 0) {
                 listEl.innerHTML = `
                     <div class="text-center py-12 px-4 border border-dashed border-slate-300 rounded-xl bg-slate-50">
-                        <p class="text-sm font-medium text-slate-600">ยังไม่มีรายการบิลที่บันทึกไว้ในเซสชันนี้</p>
-                        <p class="text-xs text-slate-400 mt-1">กดปุ่ม "เก็บบิลนี้" เพื่อเก็บรายการบิลที่เปิดอยู่ไว้กลับมาดูภายหลังค่ะ</p>
+                        <p class="text-sm font-medium text-slate-600">ยังไม่มีรายการบิลที่บันทึกไว้ในเครื่องนี้</p>
+                        <p class="text-xs text-slate-400 mt-1">กดปุ่ม "เก็บบิลนี้" เพื่อเก็บรายการบิลไว้ถาวรในเบราว์เซอร์เครื่องนี้ค่ะ</p>
                     </div>
                 `;
                 return;
@@ -1332,11 +1357,13 @@
 
         function deleteSavedBill(billId) {
             savedBillsHistory = savedBillsHistory.filter(item => item.id !== billId);
+            persistSavedBillsHistory();
             renderSavedBillsList();
         }
 
         function clearAllSavedBills() {
             savedBillsHistory = [];
+            persistSavedBillsHistory();
             renderSavedBillsList();
         }
 
@@ -1423,6 +1450,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             customQuickCustomers = loadSavedQuickCustomers();
+            savedBillsHistory = loadSavedBillsHistory();
             setTodayThaiDate();
             initTable(initialSampleItems);
             renderCustomQuickCustomers();
