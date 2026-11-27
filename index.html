@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&amp;family=Sarabun:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
     <style>
         :root {
             --primary-green: #0B6E3D;
@@ -112,7 +110,6 @@
             background-color: #F0F7F4;
         }
 
-        /* ซ่อนลูกศรขึ้นลงของ input number */
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -122,7 +119,6 @@
             -moz-appearance: textfield;
         }
 
-        /* การตั้งค่าเมื่อสั่งพิมพ์ หรือ บันทึกเป็น PDF */
         @media print {
             @page {
                 size: A4 portrait;
@@ -167,108 +163,6 @@
             }
         }
 
-        /* สไตล์ชั่วคราวขณะเรนเดอร์หน้ากระดาษบิลเป็นไฟล์ PDF */
-        .exporting-pdf .doc-input {
-            border: none !important;
-            background: transparent !important;
-            line-height: 1.45 !important;
-            padding: 3px 6px !important;
-            overflow: visible !important;
-        }
-
-        .exporting-pdf .doc-input::placeholder {
-            color: transparent !important;
-        }
-
-        .exporting-pdf .invoice-table td {
-            height: 34px !important;
-            padding: 4px 6px !important;
-            line-height: 1.45 !important;
-            vertical-align: middle !important;
-        }
-
-        /* จัดระดับข้อความแถวสรุปยอดรวมในตารางตอนสร้าง PDF ให้ลอยสมดุลเสมอกัน */
-        .exporting-pdf .invoice-table tfoot td {
-            line-height: 1.2 !important;
-            padding-top: 5px !important;
-            padding-bottom: 8px !important;
-            vertical-align: middle !important;
-        }
-
-        .exporting-pdf .invoice-table tfoot td > span,
-        .exporting-pdf .invoice-table tfoot td .pdf-print-text {
-            display: inline-block !important;
-            line-height: 1.2 !important;
-            padding-bottom: 3px !important;
-            transform: translateY(-2px);
-        }
-
-        .exporting-pdf .pdf-print-text {
-            display: block !important;
-            width: 100%;
-            box-sizing: border-box;
-            line-height: 1.2 !important;
-            padding: 0 4px 4px 4px !important;
-            margin: 0 !important;
-            color: #0F172A;
-            word-break: break-word;
-            transform: translateY(-2px);
-        }
-
-        .exporting-pdf .doc-input,
-        .exporting-pdf input[type="date"] {
-            display: none !important;
-        }
-
-        .exporting-pdf footer > div,
-        .exporting-pdf section.mt-3\.5.bg-\[\#F0F7F4\] {
-            padding-top: 6px !important;
-            padding-bottom: 10px !important;
-        }
-
-        /* จัดระดับหัวข้อและข้อความในกล่องข้อมูลการจัดส่ง หมายเหตุ และผู้ทำรายการให้ลอยเท่ากันตอนสร้าง PDF */
-        .exporting-pdf #transportSection > div:first-child {
-            padding-top: 6px !important;
-            padding-bottom: 9px !important;
-            line-height: 1.2 !important;
-        }
-
-        .exporting-pdf #transportSection > div:first-child > span {
-            display: inline-block !important;
-            line-height: 1.2 !important;
-            padding-bottom: 3px !important;
-            transform: translateY(-2px);
-        }
-
-        .exporting-pdf #transportSection .grid > div,
-        .exporting-pdf #remarksSection,
-        .exporting-pdf footer > div.bg-\[\#FFF7ED\] {
-            display: flex !important;
-            align-items: center !important;
-            padding-top: 6px !important;
-            padding-bottom: 10px !important;
-        }
-
-        .exporting-pdf #transportSection .grid > div > span,
-        .exporting-pdf #remarksSection > span,
-        .exporting-pdf footer > div.bg-\[\#FFF7ED\] > span {
-            display: inline-block !important;
-            line-height: 1.2 !important;
-            padding-bottom: 4px !important;
-            transform: translateY(-2px);
-        }
-
-        .exporting-pdf #transportSection .pdf-print-text,
-        .exporting-pdf #remarksSection .pdf-print-text,
-        .exporting-pdf footer > div.bg-\[\#FFF7ED\] .pdf-print-text {
-            flex: 1 1 auto !important;
-            width: auto !important;
-            line-height: 1.2 !important;
-            padding: 0 4px 4px 4px !important;
-            transform: translateY(-2px);
-        }
-
-        /* รองรับหน้าจอมือถือ / แท็บเล็ต */
         @media screen and (max-width: 820px) {
             .sheet-wrapper {
                 overflow-x: auto;
@@ -282,10 +176,9 @@
 </head>
 <body>
 
-    <!-- แถบเครื่องมือควบคุมด้านบน (จะถูกซ่อนอัตโนมัติเวลาสั่งพิมพ์ / Save PDF) -->
+    <!-- แถบเครื่องมือควบคุมด้านบน -->
     <div class="no-print sticky top-0 z-50 bg-slate-900 text-white shadow-lg border-b border-slate-700">
         <div class="max-w-6xl mx-auto px-4 py-3">
-            <!-- แถวบน: เลือกประเภทเอกสาร และปุ่มการทำงานหลัก -->
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-2 flex-wrap">
                     <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-md border border-emerald-700/50">
@@ -315,6 +208,10 @@
                     <button type="button" onclick="toggleHistoryDrawer()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
                         <span>บิลที่บันทึก (<span id="savedBillsCount">0</span>)</span>
                     </button>
+                    <button type="button" onclick="openCloudSyncModal()" id="cloudSyncBtn" class="bg-teal-700 hover:bg-teal-600 text-white text-sm font-medium px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer border border-teal-500/40">
+                        <span id="cloudSyncDot" class="w-2 h-2 rounded-full bg-slate-300"></span>
+                        <span id="cloudSyncLabel">ซิงค์มือถือ</span>
+                    </button>
                     <button type="button" onclick="showConfirmReset()" class="bg-amber-600 hover:bg-amber-500 text-white text-sm font-medium px-3 py-2 rounded-lg transition flex items-center gap-1.5 cursor-pointer">
                         <span>ล้างรายการ (บิลใหม่)</span>
                     </button>
@@ -325,7 +222,6 @@
                 </div>
             </div>
 
-            <!-- แถวล่าง: ตัวเลือกลัดลูกค้าประจำ และเปิด/ปิดส่วนเสริม -->
             <div class="mt-2.5 pt-2.5 border-t border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div class="flex items-center gap-1.5 flex-wrap" id="quickCustomersBar">
                     <span class="text-slate-400">ลูกค้าด่วน:</span>
@@ -357,6 +253,59 @@
         </div>
     </div>
 
+    <!-- หน้าต่างตั้งค่าการซิงค์ระหว่างคอมพิวเตอร์กับมือถือ (Firebase Cloud) -->
+    <div id="cloudSyncModal" class="no-print fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div>
+                    <h3 class="font-heading text-lg font-bold text-slate-900">ซิงค์บิลระหว่างคอมพิวเตอร์และมือถือ</h3>
+                    <p class="text-xs text-slate-500 mt-0.5">เชื่อมต่อฐานข้อมูลฟรี (Firebase Firestore) เพื่อให้บิลที่บันทึกในคอมขึ้นบนมือถือทันที</p>
+                </div>
+                <span id="cloudStatusBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">ยังไม่ได้เชื่อมต่อ</span>
+            </div>
+
+            <div class="mt-4 space-y-3 text-xs text-slate-700">
+                <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 leading-relaxed">
+                    <p class="font-bold text-emerald-900 mb-1">วิธีตั้งค่าครั้งเดียว (~2 นาที):</p>
+                    <ol class="list-decimal pl-4 space-y-1 text-emerald-800">
+                        <li>เข้าเว็บ <strong>console.firebase.google.com</strong> ด้วยบัญชี Gmail แล้วกด <strong>Create a project</strong></li>
+                        <li>เข้าเมนู <strong>Build → Firestore Database</strong> กด <strong>Create database</strong> (เลือกโหมด <strong>Start in test mode</strong>)</li>
+                        <li>เข้าเมนู <strong>Build → Authentication</strong> กด <strong>Get started</strong> → เลือกเปิดใช้งาน <strong>Anonymous</strong> (กด Enable แล้ว Save)</li>
+                        <li>กดไอคอน <strong>ฟันเฟือง (Project settings)</strong> มุมซ้ายบน → เลื่อนลงมาที่ <strong>Your apps</strong> กดปุ่มไอคอนเว็บ <strong>&lt;/&gt;</strong> → ตั้งชื่อแอปแล้วคัดลอกโค้ดส่วน <code>{ apiKey: "...", ... }</code> มาวางด้านล่างนี้</li>
+                    </ol>
+                </div>
+
+                <div>
+                    <label for="firebaseConfigInput" class="block font-semibold text-slate-800 mb-1">1. วางรหัสเชื่อมต่อ Firebase Config *</label>
+                    <textarea id="firebaseConfigInput" rows="5" placeholder='วางส่วน firebaseConfig เช่น:
+{
+  apiKey: "AIzaSy...",
+  authDomain: "xxx.firebaseapp.com",
+  projectId: "xxx",
+  storageBucket: "xxx.appspot.com",
+  messagingSenderId: "123456",
+  appId: "1:123456:web:abc"
+}' class="w-full font-mono text-xs text-slate-900 border border-slate-300 rounded-lg p-2.5 focus:outline-none focus:border-[#0B6E3D]"></textarea>
+                </div>
+
+                <div>
+                    <label for="cloudSyncRoomInput" class="block font-semibold text-slate-800 mb-1">2. ชื่อห้องซิงค์ (ตั้งให้ตรงกันทั้งในคอมและมือถือ) *</label>
+                    <input type="text" id="cloudSyncRoomInput" value="anusorn-main" placeholder="เช่น anusorn-main" class="w-full text-sm text-slate-900 border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:border-[#0B6E3D]">
+                </div>
+
+                <p id="cloudSyncError" class="text-xs text-rose-600 hidden"></p>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 mt-5 pt-3 border-t border-slate-200">
+                <button type="button" onclick="disconnectCloudSync()" class="px-3 py-2 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer">ยกเลิกการเชื่อมต่อ</button>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeCloudSyncModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition cursor-pointer">ปิด</button>
+                    <button type="button" onclick="saveCloudSyncSettings()" class="px-4 py-2 text-sm font-semibold text-white bg-teal-700 hover:bg-teal-600 rounded-lg transition cursor-pointer">บันทึกและเชื่อมต่อ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- กล่องยืนยันการล้างข้อมูล -->
     <div id="resetModal" class="no-print fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4">
         <div class="bg-white rounded-xl max-w-sm w-full p-6 shadow-2xl">
@@ -369,11 +318,11 @@
         </div>
     </div>
 
-    <!-- หน้าต่างเพิ่มปุ่มลูกค้าด่วนและบันทึกถาวรบนเครื่อง -->
+    <!-- หน้าต่างเพิ่มปุ่มลูกค้าด่วน -->
     <div id="addQuickCustomerModal" class="no-print fixed inset-0 bg-black/60 z-50 items-center justify-center p-4 hidden">
         <div class="bg-white rounded-xl max-w-sm w-full p-6 shadow-2xl">
             <h3 class="font-heading text-lg font-bold text-slate-900 mb-1">เพิ่มลูกค้าด่วน</h3>
-            <p class="text-xs text-slate-500 mb-4">ระบบจะบันทึกรายชื่อลูกค้าด่วนไว้ในเบราว์เซอร์เครื่องนี้ เมื่อรีเฟรชหรือเปิดใหม่จะยังอยู่ค่ะ</p>
+            <p class="text-xs text-slate-500 mb-4">ระบบจะบันทึกรายชื่อลูกค้าด่วนไว้ถาวร และซิงค์ขึ้นมือถือให้อัตโนมัติหากเชื่อมต่อไว้ค่ะ</p>
             <div class="space-y-3">
                 <div>
                     <label for="newQuickCustomerName" class="block text-xs font-semibold text-slate-700 mb-1">ชื่อลูกค้า *</label>
@@ -398,7 +347,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-slate-200">
                 <div>
                     <h3 class="font-heading text-base font-bold text-slate-900">รายการบิลที่บันทึกไว้</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">บันทึกถาวรในเบราว์เซอร์เครื่องนี้ • คลิก "เปิดบิลนี้" เพื่อนำกลับมาแก้ไขหรือพิมพ์</p>
+                    <p id="historyDrawerSubtitle" class="text-xs text-slate-500 mt-0.5">บันทึกถาวรในเบราว์เซอร์เครื่องนี้ • คลิก "เปิดบิลนี้" เพื่อนำกลับมาแก้ไขหรือพิมพ์</p>
                 </div>
                 <button type="button" onclick="toggleHistoryDrawer(false)" class="text-slate-500 hover:text-slate-800 text-sm font-medium px-2.5 py-1 rounded-lg hover:bg-slate-100 cursor-pointer">
                     ปิด
@@ -433,9 +382,8 @@
     <div class="sheet-wrapper">
         <div class="a4-sheet" id="invoiceSheet">
             <div>
-                <!-- 1. ส่วนหัวเอกสาร (Header) -->
+                <!-- 1. ส่วนหัวเอกสาร -->
                 <header class="flex justify-between items-start gap-4 pb-4 border-b-2 border-[#0B6E3D]">
-                    <!-- โลโก้มุมบนซ้ายและข้อมูลบริษัท -->
                     <div class="flex items-start gap-3.5">
                         <div id="companyLogoWrapper" class="flex-shrink-0 w-28 pt-0.5">
                             <svg viewBox="0 0 360 220" class="w-full h-auto" role="img" aria-label="โลโก้อนุสรณ์การเกษตร ANUSORN AGRICULTURE" xmlns="http://www.w3.org/2000/svg">
@@ -497,7 +445,6 @@
                         </div>
                     </div>
 
-                    <!-- กล่องประเภทเอกสารและตัวเลือกวันที่ -->
                     <div class="w-64 flex-shrink-0">
                         <div class="bg-[#0B6E3D] text-white text-center py-2 px-3 rounded-t-md shadow-xs">
                             <h2 id="docTitleDisplay" class="font-heading text-[15px] font-bold tracking-wide">
@@ -514,7 +461,7 @@
                     </div>
                 </header>
 
-                <!-- 2. กล่องข้อมูลลูกค้า (Customer Info Box) -->
+                <!-- 2. กล่องข้อมูลลูกค้า -->
                 <section class="mt-3.5 bg-[#F0F7F4] border border-[#CBE3D6] rounded-md px-3.5 py-2.5 text-[14px]">
                     <div class="flex items-center">
                         <span class="font-bold text-[#0B6E3D] w-20 flex-shrink-0">ชื่อลูกค้า :</span>
@@ -526,7 +473,7 @@
                     </div>
                 </section>
 
-                <!-- 3. ตารางรายการสินค้า (Product Table) -->
+                <!-- 3. ตารางรายการสินค้า -->
                 <section class="mt-3.5">
                     <table class="invoice-table" id="itemsTable">
                         <thead>
@@ -540,7 +487,6 @@
                         </thead>
                         <tbody id="itemsBody"></tbody>
                         <tfoot>
-                            <!-- แถวรวมจำนวนตัน และ รวมราคาสินค้า -->
                             <tr class="bg-[#F0F7F4] font-semibold text-[14px]">
                                 <td colspan="2" class="text-right pr-3 py-2 border border-slate-300 text-[#0B6E3D]">
                                     รวมจำนวน (ตัน)
@@ -551,7 +497,6 @@
                                 </td>
                                 <td id="subtotalDisplay" class="text-right pr-2 py-2 border border-slate-300 font-bold text-slate-900 bg-white">0.00</td>
                             </tr>
-                            <!-- แถวค่าขนส่ง (ซ่อน/แสดงได้) -->
                             <tr id="shippingRow" class="text-[14px]">
                                 <td colspan="2" class="border-0 bg-transparent"></td>
                                 <td colspan="2" class="text-right pr-2 py-1.5 border border-slate-300 font-semibold text-slate-700">
@@ -561,7 +506,6 @@
                                     <input type="text" id="shippingInput" value="0.00" onfocus="unformatInput(this)" onblur="formatCurrencyInput(this)" oninput="calculateTotals()" class="doc-input text-right font-medium text-slate-800 py-0.5">
                                 </td>
                             </tr>
-                            <!-- แถวส่วนลด (ซ่อน/แสดงได้) -->
                             <tr id="discountRow" class="text-[14px]">
                                 <td colspan="2" class="border-0 bg-transparent"></td>
                                 <td colspan="2" class="text-right pr-2 py-1.5 border border-slate-300 font-semibold text-slate-700">
@@ -571,7 +515,6 @@
                                     <input type="text" id="discountInput" value="0.00" onfocus="unformatInput(this)" onblur="formatCurrencyInput(this)" oninput="calculateTotals()" class="doc-input text-right font-medium text-slate-800 py-0.5">
                                 </td>
                             </tr>
-                            <!-- แถวยอดสุทธิ -->
                             <tr>
                                 <td colspan="2" class="border-0 bg-transparent"></td>
                                 <td colspan="2" class="text-right pr-3 py-2.5 bg-[#0B6E3D] text-white font-heading font-bold text-[15.5px] border border-[#0B6E3D]">
@@ -584,9 +527,8 @@
                 </section>
             </div>
 
-            <!-- 4. ส่วนท้ายเอกสาร: ข้อมูลจัดส่ง หมายเหตุ ผู้ทำรายการ และลายเซ็น -->
+            <!-- 4. ส่วนท้ายเอกสาร -->
             <footer class="mt-4 space-y-3">
-                <!-- กล่องข้อมูลการจัดส่ง (ซ่อน/แสดงได้) -->
                 <div id="transportSection" class="border border-slate-300 rounded-md overflow-hidden text-[13px]">
                     <div class="bg-slate-100 px-3 py-1.5 font-bold text-slate-700 border-b border-slate-300 flex justify-between items-center">
                         <span>ข้อมูลการจัดส่งสินค้า</span>
@@ -607,19 +549,16 @@
                     </div>
                 </div>
 
-                <!-- กล่องหมายเหตุข้างล่างข้อมูลการจัดส่ง -->
                 <div id="remarksSection" class="border border-slate-300 rounded-md bg-white px-3 py-2 flex items-center text-[13px]">
                     <span class="font-bold text-slate-700 whitespace-nowrap mr-2 leading-tight">หมายเหตุ :</span>
                     <input type="text" id="remarksInput" value="" placeholder="ระบุหมายเหตุเพิ่มเติม (ถ้ามี)..." class="doc-input text-[13px] text-slate-800 py-0.5">
                 </div>
 
-                <!-- แถบผู้ทำรายการ -->
                 <div class="bg-[#FFF7ED] border border-[#FED7AA] rounded-md px-3.5 py-2 flex items-center text-[13px]">
                     <span class="font-bold text-[#9A3412] whitespace-nowrap mr-2 leading-tight">ผู้ทำรายการ :</span>
                     <input type="text" id="issuerName" value="สิริเมษา เนียมวรนุช" placeholder="ระบุชื่อผู้ทำรายการ" class="doc-input font-semibold text-slate-800 text-[13px] py-0.5 w-64">
                 </div>
 
-                <!-- ช่องลงลายมือชื่อ (ซ่อน/แสดงได้) -->
                 <div id="signatureSection" class="grid grid-cols-2 gap-8 pt-6 pb-1 text-[13px] text-slate-700">
                     <div class="text-center">
                         <div class="border-b border-dotted border-slate-400 w-48 mx-auto h-6"></div>
@@ -640,8 +579,25 @@
         const DEFAULT_ROW_COUNT = 1;
         const QUICK_CUSTOMERS_STORAGE_KEY = 'anusorn_invoice_quick_customers_v1';
         const SAVED_BILLS_STORAGE_KEY = 'anusorn_invoice_saved_bills_v1';
+        const CLOUD_SYNC_CONFIG_KEY = 'anusorn_invoice_cloud_sync_v1';
+        const DEFAULT_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyB9XmS9ezBm-jmnXMhqdPruhw3ksL9fSVE",
+            authDomain: "anusorn-bill.firebaseapp.com",
+            projectId: "anusorn-bill",
+            storageBucket: "anusorn-bill.firebasestorage.app",
+            messagingSenderId: "69267811026",
+            appId: "1:69267811026:web:a8350cb39576c7a53d1b0b",
+            measurementId: "G-CK10ZT0309"
+        };
+
         let savedBillsHistory = [];
         let customQuickCustomers = [];
+        let cloudSyncState = {
+            connected: false,
+            config: null,
+            roomId: 'anusorn-main',
+            unsubscribe: null
+        };
 
         function loadSavedQuickCustomers() {
             try {
@@ -658,9 +614,8 @@
         function persistQuickCustomers() {
             try {
                 window.localStorage.setItem(QUICK_CUSTOMERS_STORAGE_KEY, JSON.stringify(customQuickCustomers));
-            } catch (err) {
-                // หากเบราว์เซอร์จำกัดพื้นที่จัดเก็บ ให้ยังใช้งานในหน่วยความจำได้ตามปกติ
-            }
+            } catch (err) {}
+            pushDataToCloud();
         }
 
         function loadSavedBillsHistory() {
@@ -675,16 +630,262 @@
             }
         }
 
-        function persistSavedBillsHistory() {
+        function persistSavedBillsHistory(skipCloudPush = false) {
+            let localOk = false;
             try {
                 window.localStorage.setItem(SAVED_BILLS_STORAGE_KEY, JSON.stringify(savedBillsHistory));
+                localOk = true;
+            } catch (err) {}
+            if (!skipCloudPush) {
+                pushDataToCloud();
+            }
+            return localOk;
+        }
+
+        // --- ระบบซิงค์ข้อมูลออนไลน์ผ่าน Firebase Firestore ---
+        function parseFirebaseConfigInput(rawText) {
+            const text = String(rawText || '').trim();
+            if (!text) return null;
+
+            const configAssignMatch = text.match(/firebaseConfig\s*=\s*(\{[\s\S]*?\})\s*;/);
+            const candidate = configAssignMatch ? configAssignMatch[1] : (() => {
+                const startIdx = text.indexOf('{');
+                const endIdx = text.lastIndexOf('}');
+                if (startIdx === -1 || endIdx === -1 || endIdx <= startIdx) return '';
+                return text.slice(startIdx, endIdx + 1);
+            })();
+
+            if (!candidate) return null;
+
+            try {
+                return JSON.parse(candidate);
+            } catch (e) {
+                try {
+                    const cleanedLines = candidate
+                        .split('\n')
+                        .map(line => line.replace(/\/\/.*$/, '').trim())
+                        .filter(Boolean)
+                        .join('\n');
+                    const normalized = cleanedLines
+                        .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
+                        .replace(/'/g, '"')
+                        .replace(/,(\s*[}\]])/g, '$1');
+                    return JSON.parse(normalized);
+                } catch (e2) {
+                    return null;
+                }
+            }
+        }
+
+        function updateCloudSyncUI(isConnected, message) {
+            const dotEl = document.getElementById('cloudSyncDot');
+            const labelEl = document.getElementById('cloudSyncLabel');
+            const badgeEl = document.getElementById('cloudStatusBadge');
+            const subtitleEl = document.getElementById('historyDrawerSubtitle');
+
+            if (isConnected) {
+                if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+                if (labelEl) labelEl.textContent = `ซิงค์อยู่ (${cloudSyncState.roomId})`;
+                if (badgeEl) {
+                    badgeEl.textContent = message || 'เชื่อมต่อแล้ว';
+                    badgeEl.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800';
+                }
+                if (subtitleEl) {
+                    subtitleEl.textContent = `ซิงค์ออนไลน์ห้อง "${cloudSyncState.roomId}" • ข้อมูลตรงกันทั้งคอมและมือถือ`;
+                }
+            } else {
+                if (dotEl) dotEl.className = 'w-2 h-2 rounded-full bg-slate-300';
+                if (labelEl) labelEl.textContent = 'ซิงค์มือถือ';
+                if (badgeEl) {
+                    badgeEl.textContent = message || 'ยังไม่ได้เชื่อมต่อ';
+                    badgeEl.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600';
+                }
+                if (subtitleEl) {
+                    subtitleEl.textContent = 'บันทึกถาวรในเบราว์เซอร์เครื่องนี้ • กด "ซิงค์มือถือ" เพื่อเชื่อมคอมกับมือถือ';
+                }
+            }
+        }
+
+        function openCloudSyncModal() {
+            const modal = document.getElementById('cloudSyncModal');
+            const configInput = document.getElementById('firebaseConfigInput');
+            const roomInput = document.getElementById('cloudSyncRoomInput');
+            const errEl = document.getElementById('cloudSyncError');
+            if (!modal) return;
+
+            if (errEl) errEl.classList.add('hidden');
+            if (cloudSyncState.config && configInput) {
+                configInput.value = JSON.stringify(cloudSyncState.config, null, 2);
+            }
+            if (roomInput) {
+                roomInput.value = cloudSyncState.roomId || 'anusorn-main';
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCloudSyncModal() {
+            const modal = document.getElementById('cloudSyncModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        async function saveCloudSyncSettings() {
+            const configInput = document.getElementById('firebaseConfigInput');
+            const roomInput = document.getElementById('cloudSyncRoomInput');
+            const errEl = document.getElementById('cloudSyncError');
+            if (!configInput || !roomInput) return;
+
+            const rawConfigText = String(configInput.value || '').trim();
+            let parsedConfig = rawConfigText
+                ? parseFirebaseConfigInput(rawConfigText)
+                : { ...DEFAULT_FIREBASE_CONFIG };
+            const roomId = roomInput.value.trim().replace(/[^a-zA-Z0-9_-]/g, '') || 'anusorn-main';
+
+            if (!parsedConfig && rawConfigText) {
+                parsedConfig = { ...DEFAULT_FIREBASE_CONFIG };
+            }
+
+            if (!parsedConfig || !parsedConfig.apiKey || !parsedConfig.projectId) {
+                if (errEl) {
+                    errEl.textContent = 'รูปแบบ Firebase Config ไม่ถูกต้อง กรุณาลบให้ว่างเพื่อใช้ค่าเริ่มต้นของ anusorn-bill หรือคัดลอกส่วน { apiKey: "...", projectId: "..." } มาวางให้ครบค่ะ';
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+
+            configInput.value = JSON.stringify(parsedConfig, null, 2);
+            if (errEl) errEl.classList.add('hidden');
+
+            try {
+                window.localStorage.setItem(CLOUD_SYNC_CONFIG_KEY, JSON.stringify({
+                    config: parsedConfig,
+                    roomId
+                }));
+            } catch (e) {}
+
+            const ok = await connectFirebaseSync(parsedConfig, roomId, true);
+            if (ok) {
+                closeCloudSyncModal();
+                showStatusNotice(
+                    'เชื่อมต่อซิงค์สำเร็จแล้ว!',
+                    `ซิงค์ห้อง "${roomId}" เรียบร้อย บิลที่บันทึกในคอมจะไปขึ้นบนมือถือทันทีค่ะ`
+                );
+            }
+        }
+
+        function disconnectCloudSync() {
+            if (typeof cloudSyncState.unsubscribe === 'function') {
+                cloudSyncState.unsubscribe();
+            }
+            cloudSyncState.connected = false;
+            cloudSyncState.config = null;
+            cloudSyncState.unsubscribe = null;
+            try {
+                window.localStorage.removeItem(CLOUD_SYNC_CONFIG_KEY);
+            } catch (e) {}
+            updateCloudSyncUI(false, 'ยกเลิกการเชื่อมต่อแล้ว');
+            closeCloudSyncModal();
+        }
+
+        async function connectFirebaseSync(firebaseConfig, roomId, isInitialSetup = false) {
+            try {
+                updateCloudSyncUI(false, 'กำลังเชื่อมต่อ...');
+                const [appMod, authMod, fsMod] = await Promise.all([
+                    import('https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js'),
+                    import('https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js'),
+                    import('https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js')
+                ]);
+
+                const existingApps = appMod.getApps();
+                const app = existingApps.length > 0 ? existingApps[0] : appMod.initializeApp(firebaseConfig);
+                const auth = authMod.getAuth(app);
+                await authMod.signInAnonymously(auth);
+
+                const db = fsMod.getFirestore(app);
+                const docRef = fsMod.doc(db, 'anusorn_invoice_rooms', roomId);
+
+                if (typeof cloudSyncState.unsubscribe === 'function') {
+                    cloudSyncState.unsubscribe();
+                }
+
+                cloudSyncState.config = firebaseConfig;
+                cloudSyncState.roomId = roomId;
+                cloudSyncState.db = db;
+                cloudSyncState.docRef = docRef;
+                cloudSyncState.setDoc = fsMod.setDoc;
+                cloudSyncState.connected = true;
+
+                if (isInitialSetup) {
+                    const snap = await fsMod.getDoc(docRef);
+                    if (!snap.exists() && (savedBillsHistory.length > 0 || customQuickCustomers.length > 0)) {
+                        await fsMod.setDoc(docRef, {
+                            bills: savedBillsHistory,
+                            quickCustomers: customQuickCustomers,
+                            updatedAt: Date.now()
+                        }, { merge: true });
+                    }
+                }
+
+                cloudSyncState.unsubscribe = fsMod.onSnapshot(docRef, (snapshot) => {
+                    if (!snapshot.exists()) return;
+                    const data = snapshot.data() || {};
+                    if (Array.isArray(data.bills)) {
+                        savedBillsHistory = data.bills;
+                        try {
+                            window.localStorage.setItem(SAVED_BILLS_STORAGE_KEY, JSON.stringify(savedBillsHistory));
+                        } catch (e) {}
+                        renderSavedBillsList();
+                    }
+                    if (Array.isArray(data.quickCustomers)) {
+                        customQuickCustomers = data.quickCustomers;
+                        try {
+                            window.localStorage.setItem(QUICK_CUSTOMERS_STORAGE_KEY, JSON.stringify(customQuickCustomers));
+                        } catch (e) {}
+                        renderCustomQuickCustomers();
+                    }
+                });
+
+                updateCloudSyncUI(true, 'เชื่อมต่อแล้ว');
                 return true;
             } catch (err) {
+                cloudSyncState.connected = false;
+                updateCloudSyncUI(false, 'เชื่อมต่อไม่สำเร็จ');
+                const errEl = document.getElementById('cloudSyncError');
+                if (errEl) {
+                    errEl.textContent = 'เชื่อมต่อไม่ได้: กรุณาตรวจสอบว่าเปิดใช้งาน Firestore (Test mode) และ Anonymous Authentication แล้วค่ะ (' + (err.message || err) + ')';
+                    errEl.classList.remove('hidden');
+                }
                 return false;
             }
         }
 
-        // ข้อมูลโปรไฟล์บริษัทสำหรับสลับออกบิล (สามารถคลิกแก้ไขชื่อ/ที่อยู่/เบอร์โทรบนบิลได้โดยตรง)
+        async function pushDataToCloud() {
+            if (!cloudSyncState.connected || !cloudSyncState.docRef || !cloudSyncState.setDoc) return;
+            try {
+                await cloudSyncState.setDoc(cloudSyncState.docRef, {
+                    bills: savedBillsHistory,
+                    quickCustomers: customQuickCustomers,
+                    updatedAt: Date.now()
+                }, { merge: true });
+            } catch (err) {
+                console.warn('Cloud sync push failed:', err);
+            }
+        }
+
+        async function initSavedCloudSync() {
+            try {
+                const raw = window.localStorage.getItem(CLOUD_SYNC_CONFIG_KEY);
+                if (!raw) return;
+                const saved = JSON.parse(raw);
+                if (saved && saved.config && saved.roomId) {
+                    await connectFirebaseSync(saved.config, saved.roomId, false);
+                }
+            } catch (e) {}
+        }
+
         const companyProfiles = {
             anusorn: {
                 name: 'บริษัท อนุสรณ์การเกษตร จำกัด',
@@ -702,7 +903,6 @@
 
         let activeCompanyKey = 'anusorn';
 
-        // บันทึกการแก้ไขข้อมูลบริษัทลงในโปรไฟล์ที่กำลังใช้งานอยู่
         function saveCurrentProfileEdits() {
             const nameEl = document.getElementById('companyNameDisplay');
             const addrEl = document.getElementById('companyAddressDisplay');
@@ -715,7 +915,6 @@
             if (phoneEl) prof.phone = phoneEl.textContent.trim();
         }
 
-        // สลับข้อมูลหัวบิลตามโปรไฟล์บริษัทที่เลือก
         function applyCompanyProfile() {
             saveCurrentProfileEdits();
             const selectEl = document.getElementById('companyProfileSelect');
@@ -846,7 +1045,7 @@
             renderCustomQuickCustomers();
             setCustomer(name, address);
             closeAddQuickCustomerModal();
-            showStatusNotice('บันทึกลูกค้าด่วนแล้ว', `บันทึกปุ่ม "${name}" ไว้ในเครื่องเรียบร้อย กดรีเฟรชแล้วจะยังอยู่ค่ะ`);
+            showStatusNotice('บันทึกลูกค้าด่วนแล้ว', `บันทึกปุ่ม "${name}" เรียบร้อยค่ะ`);
         }
 
         function removeQuickCustomer(id) {
@@ -1211,13 +1410,16 @@
                 };
 
                 savedBillsHistory.unshift(record);
-                const persisted = persistSavedBillsHistory();
+                persistSavedBillsHistory();
                 renderSavedBillsList();
+
+                const syncNote = cloudSyncState.connected
+                    ? ` และส่งขึ้นห้องซิงค์ "${cloudSyncState.roomId}" เพื่อเปิดดูบนมือถือทันทีแล้วค่ะ`
+                    : ' ไว้ในเครื่องเรียบร้อยค่ะ (กดปุ่ม "ซิงค์มือถือ" ด้านบนหากต้องการให้ไปขึ้นบนมือถืออัตโนมัติ)';
+
                 showStatusNotice(
                     'เก็บบิลเรียบร้อยแล้ว',
-                    persisted
-                        ? `บันทึก "${record.docType}" ของ ${record.customerName} (ยอดสุทธิ ${record.netTotal} บาท) ไว้ถาวรในเบราว์เซอร์เครื่องนี้แล้วค่ะ`
-                        : `บันทึก "${record.docType}" ของ ${record.customerName} (ยอดสุทธิ ${record.netTotal} บาท) ในหน้านี้แล้ว (พื้นที่เก็บถาวรของเบราว์เซอร์อาจเต็มหรือถูกจำกัด)`
+                    `บันทึก "${record.docType}" ของ ${record.customerName} (ยอดสุทธิ ${record.netTotal} บาท)${syncNote}`
                 );
             } catch (err) {
                 showStatusNotice('ไม่สามารถเก็บบิลได้', 'เกิดข้อผิดพลาดขณะรวบรวมข้อมูลบิลปัจจุบันค่ะ');
@@ -1249,8 +1451,8 @@
             if (savedBillsHistory.length === 0) {
                 listEl.innerHTML = `
                     <div class="text-center py-12 px-4 border border-dashed border-slate-300 rounded-xl bg-slate-50">
-                        <p class="text-sm font-medium text-slate-600">ยังไม่มีรายการบิลที่บันทึกไว้ในเครื่องนี้</p>
-                        <p class="text-xs text-slate-400 mt-1">กดปุ่ม "เก็บบิลนี้" เพื่อเก็บรายการบิลไว้ถาวรในเบราว์เซอร์เครื่องนี้ค่ะ</p>
+                        <p class="text-sm font-medium text-slate-600">ยังไม่มีรายการบิลที่บันทึกไว้</p>
+                        <p class="text-xs text-slate-400 mt-1">กดปุ่ม "เก็บบิลนี้" เพื่อเก็บรายการบิลไว้ใช้งานและซิงค์ข้ามอุปกรณ์ค่ะ</p>
                     </div>
                 `;
                 return;
@@ -1261,19 +1463,19 @@
                     <div class="flex items-start justify-between gap-2">
                         <div>
                             <span class="inline-block text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                                ${bill.docType}
+                                ${escapeHtmlAttr(bill.docType)}
                             </span>
                             <h4 class="font-heading text-sm font-bold text-slate-900 mt-1">
-                                ${bill.customerName}
+                                ${escapeHtmlAttr(bill.customerName)}
                             </h4>
                             <p class="text-xs text-slate-500 mt-0.5">
-                                วันที่ ${bill.docDateDisplay || '-'} • บันทึกเวลา ${bill.savedAtTime} น.
+                                วันที่ ${escapeHtmlAttr(bill.docDateDisplay || '-')} • บันทึกเวลา ${escapeHtmlAttr(bill.savedAtTime)} น.
                             </p>
                         </div>
                         <div class="text-right">
                             <p class="text-xs text-slate-500">ยอดสุทธิ</p>
-                            <p class="font-heading text-sm font-bold text-[#0B6E3D]">${bill.netTotal} บาท</p>
-                            <p class="text-[11px] text-slate-500">รวม ${bill.totalTons} ตัน</p>
+                            <p class="font-heading text-sm font-bold text-[#0B6E3D]">${escapeHtmlAttr(bill.netTotal)} บาท</p>
+                            <p class="text-[11px] text-slate-500">รวม ${escapeHtmlAttr(bill.totalTons)} ตัน</p>
                         </div>
                     </div>
                     <div class="mt-3 pt-2.5 border-t border-slate-200/80 flex items-center justify-end gap-2">
@@ -1408,39 +1610,6 @@
                 }
                 window.print();
             } catch (err) {
-                try {
-                    syncFormAttributesForExport();
-                    const sheetEl = document.getElementById('invoiceSheet');
-                    const styleTags = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-                        .map(tag => tag.outerHTML)
-                        .join('\n');
-                    const printWin = window.open('', '_blank', 'width=900,height=1100');
-                    if (printWin && sheetEl) {
-                        printWin.document.open();
-                        printWin.document.write(`
-                            <!DOCTYPE html>
-                            <html lang="th">
-                            <head>
-                                <meta charset="UTF-8">
-                                <title>พิมพ์เอกสาร</title>
-                                ${styleTags}
-                            </head>
-                            <body style="background:#fff;margin:0;padding:0;">
-                                ${sheetEl.outerHTML}
-                            </body>
-                            </html>
-                        `);
-                        printWin.document.close();
-                        printWin.focus();
-                        setTimeout(() => {
-                            printWin.print();
-                        }, 250);
-                        return;
-                    }
-                } catch (popupErr) {
-                    // แจ้งวิธีสำรองหากป๊อปอัปถูกบล็อกเช่นกัน
-                }
-
                 showStatusNotice(
                     'หน้าต่าง Preview อาจจำกัดคำสั่งพิมพ์',
                     'ลองคลิกภายในกระดาษเอกสารแล้วกด Ctrl+P (หรือ Cmd+P บน Mac) และเลือก "Save as PDF" ในหน้าต่างพิมพ์ได้เลยค่ะ'
@@ -1455,6 +1624,7 @@
             initTable(initialSampleItems);
             renderCustomQuickCustomers();
             renderSavedBillsList();
+            initSavedCloudSync();
         });
     </script>
 
